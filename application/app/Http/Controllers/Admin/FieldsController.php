@@ -36,12 +36,20 @@ class FieldsController extends Controller
 
       $v = $request->validate([
         'company' => 'required|alpha_dash_space|max:100',
+        'id_empresa' => 'required|integer',
+        'cnpj' => 'required|regex:/^\d{14}$/'
       ]);
 
       $company = mb_strtoupper($request->company);
+      $id_empresa = $request->id_empresa;
+      $cnpj = $request->cnpj;
 
       table::company()->insert([
-        ['company' => $company],
+        [
+          'company' => $company,
+          'id_empresa' => $id_empresa,
+          'cnpj' => $cnpj,
+      ],
       ]);
 
       return redirect('fields/company')->with('success', trans("New company has been added!"));
