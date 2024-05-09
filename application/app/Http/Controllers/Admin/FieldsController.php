@@ -83,13 +83,21 @@ class FieldsController extends Controller
 
       $v = $request->validate([
         'department' => 'required|alpha_dash_space|max:100',
-      ]);
+        'id_turma' => 'required|integer',
+        'semestre' => 'required|string|max:10'
+    ]);
 
-      $department = mb_strtoupper($request->department);
+    $department = mb_strtoupper($request->department);
+    $id_turma = $request->id_turma;
+    $semestre = $request->semestre;
 
-      table::department()->insert([
-        ['department' => $department],
-      ]);
+    table::department()->insert([
+      [
+          'department' => $department,
+          'id_turma' => $id_turma,
+          'semestre' => $semestre
+      ],
+  ]);
 
       return redirect('fields/department')->with('success', trans("New department has been added!"));
     }
