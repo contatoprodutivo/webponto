@@ -140,12 +140,12 @@
                                     <div class="menu" tabindex="-1">
                                       <a href="{{ url('clock') }}" target="_blank" class="item"><i class="ui icon clock outline"></i>{{ __('Clock In/Out') }}</a>
                                       <div class="divider"></div>
-                                      <a href="{{ url('employees/new') }}" class="item"><i class="ui icon user plus"></i>{{ __('New Employee') }}</a>
+                                      <a href="{{ url('employees/new') }}" class="item"><i class="ui icon user plus"></i>{{ __('Novo usuário') }}</a>
                                       <div class="divider"></div>
-                                      <a href="{{ url('fields/company') }}" class="item"><i class="ui icon university"></i>{{ __('Company') }}</a>
-                                      <a href="{{ url('fields/department') }}" class="item"><i class="ui icon cubes"></i>{{ __('Department') }}</a>
-                                      <a href="{{ url('fields/jobtitle') }}" class="item"><i class="ui icon pencil alternate"></i>{{ __('Job Title') }}</a>
-                                      <a href="{{ url('fields/leavetype') }}" class="item"><i class="ui icon calendar alternate outline"></i>{{ __('Leave Type') }}</a>
+                                      <a href="{{ url('fields/company') }}" class="item"><i class="ui icon university"></i>{{ __('Empresa') }}</a>
+                                      <a href="{{ url('fields/department') }}" class="item"><i class="ui icon users"></i>{{ __('Turma') }}</a>
+                                      <!--<a href="{{ url('fields/jobtitle') }}" class="item"><i class="ui icon pencil alternate"></i>{{ __('Job Title') }}</a>
+                                      <a href="{{ url('fields/leavetype') }}" class="item"><i class="ui icon calendar alternate outline"></i>{{ __('Leave Type') }}</a> -->
                                     </div>
                               </div>
                             </li>
