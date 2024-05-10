@@ -106,10 +106,10 @@ $('#add_employee_form, #edit_employee_form').form({
             identifier: 'firstname',
             rules: [{
                 type: 'empty',
-                prompt: 'Please enter a First name'
+                prompt: 'Preencha o nome completo'
             }]
         },
-        lastname: {
+        /*lastname: {
             identifier: 'lastname',
             rules: [{
                 type: 'empty',
@@ -122,19 +122,33 @@ $('#add_employee_form, #edit_employee_form').form({
                 type: 'email',
                 prompt: 'Please enter an Email address'
             }]
+        },*/
+        company: {
+            identifier: 'company',
+            rules: [{
+                type: 'empty',
+                prompt: 'Selecione uma empresa'
+            }]
+        },
+        department: {
+            identifier: 'department',
+            rules: [{
+                type: 'empty',
+                prompt: 'Selecione uma turma'
+            }]
         },
         idno: {
             identifier: 'idno',
             rules: [{
                 type: 'empty',
-                prompt: 'Please enter an ID number'
+                prompt: 'Preencha o campo matrícula'
             }]
         },
         employmentstatus: {
             identifier: 'employmentstatus',
             rules: [{
                 type: 'empty',
-                prompt: 'Please select an Employment status'
+                prompt: 'Selecione o status'
             }]
         },
     }
