@@ -82,9 +82,9 @@ class FieldsController extends Controller
       if (permission::permitted('departments-add')=='fail'){ return redirect()->route('denied'); }
 
       $v = $request->validate([
-        'department' => 'required|alpha_dash_space|max:100',
+       // 'department' => 'required|alpha_dash_space|max:100',
         'id_turma' => 'required|integer',
-        'semestre' => 'required|string|max:10'
+       // 'semestre' => 'required|string|max:10'
     ]);
 
     $department = mb_strtoupper($request->department);
