@@ -41,11 +41,11 @@
                         </div>
                         <div class="field">
                             <label>{{ __("ID Turma") }}</label>
-                            <input name="id_turma" type="text" value="">
+                            <input class="uppercase" name="id_turma" type="text" value="">
                         </div>
                         <div class="field">
                             <label>{{ __("Semestre") }} <span class="help">Exemplo: 2024.1</span></label>
-                            <input name="semestre" type="text" value="">
+                            <input class="uppercase" name="semestre" type="text" value="">
                         </div>
                         <div class="actions">
                             <button type="submit" class="ui positive button small"><i class="ui icon check"></i>{{ __("Salvar") }}</button>

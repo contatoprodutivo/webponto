@@ -41,11 +41,11 @@
                         </div>
                         <div class="field">
                             <label>{{ __("ID Empresa") }}</label>
-                            <input name="id_empresa" type="text" value="">
+                            <input class="uppercase" name="id_empresa" type="text" value="">
                         </div>
                         <div class="field">
                             <label>{{ __("CNPJ") }} <span class="help">Insira o CNPJ sem pontos e traços: 98765432000123</span></label>
-                            <input name="cnpj" type="text" value="">
+                            <input class="uppercase" name="cnpj" type="text" value="">
                         </div>
                         <div class="actions">
                             <button type="submit" class="ui positive button small"><i class="ui icon check"></i>Salvar</button>
