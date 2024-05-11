@@ -153,7 +153,7 @@ $('#add_employee_form, #edit_employee_form').form({
         },
     }
 });
-
+/*
 $('#edit_attendance_form').form({
     fields: {
         employee: {
@@ -192,7 +192,7 @@ $('#edit_attendance_form').form({
             }]
         },
     }
-});
+});*/
 
 $('#add_schedule_form, #edit_schedule_form').form({
     fields: {

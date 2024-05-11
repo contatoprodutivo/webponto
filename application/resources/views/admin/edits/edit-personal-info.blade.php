@@ -1,7 +1,7 @@
 @extends('layouts.default')
     
     @section('meta')
-        <title>Edit Employee Profile | Workday Time Clock</title>
+        <title>Editar Usuário | Webponto</title>
         <meta name="description" content="Workday edit employee profile.">
     @endsection 
 
@@ -14,7 +14,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="page-title">{{ __('Edit Employee Profile') }}
+                <h2 class="page-title">{{ __('Editar Usuário') }}
                     <a href="{{ url('employees') }}" class="ui basic blue button mini offsettop5 float-right"><i class="ui icon chevron left"></i>{{ __('Return') }}</a>
                 </h2>
             </div>    
@@ -41,29 +41,30 @@
                     <div class="box box-success">
                         <div class="box-header with-border">{{ __('Personal Information') }}</div>
                         <div class="box-body">
-                            <div class="two fields">
+
+                            <div class="field">
                                 <div class="field">
-                                    <label>{{ __('First Name') }}</label>
+                                    <label>{{ __('Nome completo') }}</label>
                                     <input type="text" class="uppercase" name="firstname" value="@isset($person_details->firstname){{ $person_details->firstname }}@endisset">
                                 </div>
-                                <div class="field">
+                               <!-- <div class="field">
                                     <label>{{ __('Middle Name') }}</label>
                                     <input type="text" class="uppercase" name="mi" value="@isset($person_details->mi){{ $person_details->mi }}@endisset">
-                                </div>
-                            </div>
-                            <div class="field">
+                                </div> -->
+                            </div> 
+                           <!-- <div class="field">
                                 <label>{{ __('Last Name') }}</label>
                                 <input type="text" class="uppercase" name="lastname" value="@isset($person_details->lastname){{ $person_details->lastname }}@endisset">
-                            </div>
-                            <div class="field">
+                            </div> -->
+                           <!-- <div class="field">
                                 <label>{{ __('Gender') }}</label>
                                 <select name="gender" class="ui dropdown uppercase">
                                     <option value="">Select Gender</option>
                                     <option value="MALE" @isset($person_details->gender) @if($person_details->gender == 'MALE') selected @endif @endisset>MALE</option>
                                     <option value="FEMALE" @isset($person_details->gender) @if($person_details->gender == 'FEMALE') selected @endif @endisset>FEMALE</option>
                                 </select>
-                            </div>
-                            <div class="field">
+                            </div> -->
+                         <!--   <div class="field">
                                 <label>{{ __('Civil Status') }}</label>
                                 <select name="civilstatus" class="ui dropdown uppercase">
                                     <option value="">Select Civil Status</option>
@@ -73,7 +74,7 @@
                                     <option value="WIDOWED" @isset($person_details->civilstatus) @if($person_details->civilstatus == 'WIDOWED') selected @endif @endisset>WIDOWED</option>
                                     <option value="LEGALLY SEPARATED" @isset($person_details->civilstatus) @if($person_details->civilstatus == 'LEGALLY SEPARATED') selected @endif @endisset>LEGALLY SEPARATED</option>
                                 </select>
-                            </div>
+                            </div> 
                             <div class="two fields">
                                 <div class="field">
                                     <label>{{ __('Height') }} <span class="help">(cm)</span></label>
@@ -83,18 +84,18 @@
                                     <label>{{ __('Weight') }} <span class="help">(pounds)</span></label>
                                     <input type="text" name="weight" value="@isset($person_details->weight){{ $person_details->weight }}@endisset" placeholder="000">
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="two fields">
                             <div class="field">
-                                <label>{{ __('Email Address (Personal)') }}</label>
+                                <label>{{ __('E-mail') }}</label>
                                 <input type="email" name="emailaddress" value="@isset($person_details->emailaddress){{ $person_details->emailaddress }}@endisset" class="lowercase">
                             </div>
                             <div class="field">
-                                <label>{{ __('Mobile Number') }}</label>
+                                <label>{{ __('Celular') }}</label>
                                 <input type="text" class="uppercase" name="mobileno" value="@isset($person_details->mobileno){{ $person_details->mobileno }}@endisset">
                             </div>
                             </div>
-                            <div class="two fields">
+                            <!--<div class="two fields">
                                 <div class="field">
                                     <label>{{ __('Age') }}</label>
                                     <input type="text" name="age" value="@isset($person_details->age){{ $person_details->age }}@endisset" placeholder="00">
@@ -115,7 +116,7 @@
                             <div class="field">
                                 <label>{{ __('Home Address') }}</label>
                                 <input type="text" class="uppercase" name="homeaddress" value="@isset($person_details->homeaddress){{ $person_details->homeaddress }}@endisset" placeholder="House/Unit Number, Building, Street, City, Province, Country">
-                            </div>
+                            </div> -->
                             <div class="field">
                                 <label>{{ __('Upload Profile photo') }}</label>
                                 <input class="ui file upload" value="" id="imagefile" name="image" type="file" accept="image/png, image/jpeg, image/jpg" onchange="validateFile()">
@@ -126,32 +127,65 @@
                 </div>
                 <div class="col-md-6 float-left">
                     <div class="box box-success">
-                        <div class="box-header with-border">{{ __('Employee Details') }}</div>
+                        <div class="box-header with-border">{{ __('Detalhes do Usuário') }}</div>
                         <div class="box-body">
-                            <h4 class="ui dividing header">{{ __('Designation') }}</h4>
-                            <div class="field">
-                                <label>{{ __('Company') }}</label>
-                                <select name="company" class="ui search dropdown uppercase">
-                                    <option value="">Select Company</option>
-                                    @isset($company)
-                                        @foreach ($company as $data)
-                                            <option value="{{ $data->company }}" @if($data->company == $company_details->company) selected @endif> {{ $data->company }}</option>
-                                        @endforeach
-                                    @endisset
-                                </select>
+                           <!-- <h4 class="ui dividing header">{{ __('Designation') }}</h4> -->
+                           <div class="field">
+                                <label>{{ __('Matrícula') }}</label>
+                                <input type="text" class="uppercase" name="idno" value="@isset($company_details->idno){{ $company_details->idno }}@endisset">
                             </div>
+                           
                             <div class="field">
-                                <label>{{ __('Department') }}</label>
-                                <select name="department" class="ui search dropdown uppercase department">
-                                    <option value="">Select Department</option>
-                                    @isset($department)
-                                        @foreach ($department as $data)
-                                            <option value="{{ $data->department }}" @if($data->department == $company_details->department) selected @endif> {{ $data->department }}</option>
-                                        @endforeach
-                                    @endisset
-                                </select>
-                            </div>
-                            <div class="field">
+    <label>{{ __('Empresa') }}</label>
+    <select name="company" class="ui search dropdown uppercase">
+        <option value="">Selecione</option>
+        @isset($company)
+            @foreach ($company as $data)
+                @php
+                    // Normaliza os espaços e remove espaços extras após a vírgula
+                    $currentValue = preg_replace('/\s*,\s*/', ', ', trim($data->id_empresa . ', ' . $data->company));
+                    $formattedCurrentValue = preg_replace('/\s+/', ' ', $currentValue);
+                    $formattedStoredCompany = preg_replace('/\s+/', ' ', trim($company_details->company));
+                @endphp
+                <option value="{{ $formattedCurrentValue }}"
+                        @if ($formattedCurrentValue == $formattedStoredCompany) selected @endif>
+                    {{ $formattedCurrentValue }}
+                </option>
+            @endforeach
+        @endisset
+    </select>
+</div>
+
+<div class="field">
+    <label>{{ __('Turma') }}</label>
+    <select name="department" class="ui search dropdown uppercase department">
+        <option value="">Selecione</option>
+        @isset($department)
+            @foreach ($department as $data)
+                @php
+                    // Normaliza os espaços e remove espaços extras após a vírgula
+                    $currentDeptValue = preg_replace('/\s*,\s*/', ', ', trim($data->id_turma . ', ' . $data->department));
+                    $formattedCurrentDeptValue = preg_replace('/\s+/', ' ', $currentDeptValue);
+                    $formattedStoredDeptValue = preg_replace('/\s+/', ' ', trim($company_details->department));
+                @endphp
+                <option value="{{ $formattedCurrentDeptValue }}"
+                        @if ($formattedCurrentDeptValue == $formattedStoredDeptValue) selected @endif>
+                    {{ $formattedCurrentDeptValue }}
+                </option>
+            @endforeach
+        @endisset
+    </select>
+</div>
+
+
+<!--Blade para ver os valores que estão sendo comparados -->
+<!--<pre>{{ var_dump($company_details) }}</pre> -->
+
+
+
+
+
+                            <!--<div class="field">
                                 <label>{{ __('Job Title / Position') }}</label>
                                 <div class="ui search dropdown selection uppercase jobposition">
                                     <input type="hidden" name="jobposition" value="{{$company_details->jobposition}}">
@@ -172,10 +206,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="field">
-                                <label>{{ __('ID Number') }}</label>
-                                <input type="text" class="uppercase" name="idno" value="@isset($company_details->idno){{ $company_details->idno }}@endisset">
-                            </div>
+                         
                             <div class="field">
                                 <label>{{ __('Email Address (Company)') }}</label>
                                 <input type="email" name="companyemail" value="@isset($company_details->companyemail){{ $company_details->companyemail }}@endisset" class="lowercase">
@@ -199,23 +230,23 @@
                                     <option value="Regular" @isset($person_details->employmenttype) @if($person_details->employmenttype == 'Regular') selected @endif @endisset>Regular</option>
                                     <option value="Trainee" @isset($person_details->employmenttype) @if($person_details->employmenttype == 'Trainee') selected @endif @endisset>Trainee</option>
                                 </select>
-                            </div>
-                            <div class="field">
-                                <label>{{ __('Employment Status') }}</label>
+                            </div> -->
+                          <div class="field">
+                                <label>{{ __('Status') }}</label>
                                 <select name="employmentstatus" class="ui dropdown uppercase">
-                                    <option value="">Select Status</option>
-                                    <option value="Active" @isset($person_details->employmentstatus) @if($person_details->employmentstatus == 'Active') selected @endif @endisset>Active</option>
-                                    <option value="Archived" @isset($person_details->employmentstatus) @if($person_details->employmentstatus == 'Archived') selected @endif @endisset>Archived</option>
+                                    <option value="">Selecione</option>
+                                    <option value="Active" @isset($person_details->employmentstatus) @if($person_details->employmentstatus == 'Active') selected @endif @endisset>Ativo</option>
+                                    <option value="Archived" @isset($person_details->employmentstatus) @if($person_details->employmentstatus == 'Archived') selected @endif @endisset>Inativo</option>
                                 </select>
                             </div>
-                            <div class="field">
+                             <!-- <div class="field">
                                 <label>{{ __('Official Start Date') }}</label>
                                 <input type="text" name="startdate" value="@isset($company_details->startdate){{ $company_details->startdate }}@endisset" class="airdatepicker" placeholder="Date">
                             </div>
                             <div class="field">
                                 <label>{{ __('Date Regularized') }}</label>
                                 <input type="text" name="dateregularized" value="@isset($company_details->dateregularized){{ $company_details->dateregularized }}@endisset" class="airdatepicker" placeholder="Date">
-                            </div>
+                            </div> -->
                             <br>
                         </div>
                     </div>

@@ -86,13 +86,13 @@ class ProfileController extends Controller
 		if (permission::permitted('employees-edit')=='fail'){ return redirect()->route('denied'); }
 
 		$v = $request->validate([
-			'id' => 'required|max:200',
-			'lastname' => 'required|alpha_dash_space|max:155',
-			'firstname' => 'required|alpha_dash_space|max:155',
+			//'id' => 'required|max:200',
+			//'lastname' => 'required|alpha_dash_space|max:155',
+			//'firstname' => 'required|alpha_dash_space|max:155',
 			// 'mi' => 'required|alpha_dash_space|max:155',
 			// 'age' => 'required|digits_between:0,199|max:3',
 			// 'gender' => 'required|alpha|max:155',
-			'emailaddress' => 'required|email|max:155',
+			//'emailaddress' => 'required|email|max:155',
 			// 'civilstatus' => 'required|alpha|max:155',
 			// 'height' => 'required|digits_between:0,299|max:3',
 			// 'weight' => 'required|digits_between:0,999|max:3',
@@ -106,9 +106,9 @@ class ProfileController extends Controller
 			// 'jobposition' => 'required|alpha_dash_space|max:100',
 			// 'companyemail' => 'required|email|max:155',
 			// 'leaveprivilege' => 'required|max:155',
-			'idno' => 'required|max:155',
+			//'idno' => 'required|max:155',
 			// 'employmenttype' => 'required|alpha_dash_space|max:155',
-			'employmentstatus' => 'required|alpha_dash_space|max:155',
+			//'employmentstatus' => 'required|alpha_dash_space|max:155',
 			// 'startdate' => 'required|date|max:155',
 			// 'dateregularized' => 'required|date|max:155'
 		]);
