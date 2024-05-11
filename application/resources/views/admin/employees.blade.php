@@ -20,11 +20,11 @@
                 <table width="100%" class="table table-striped table-hover" id="dataTables-example" data-order='[[ 0, "desc" ]]'>
                     <thead>
                         <tr>
-                            <th>{{ __('ID') }}</th> 
-                            <th>{{ __('Employee') }}</th> 
-                            <th>{{ __('Company') }}</th>
-                            <th>{{ __('Department') }}</th>
-                            <th>{{ __('Position') }}</th>
+                            <th>{{ __('Matrícula') }}</th> 
+                            <th>{{ __('Usuário') }}</th> 
+                            <th>{{ __('Empresa') }}</th>
+                            <th>{{ __('Turma') }}</th>
+                            
                             <th>{{ __('Status') }}</th>
                             <th class=""></th>
                         </tr>
@@ -34,13 +34,13 @@
                         @foreach ($data as $employee)
                             <tr class="">
                             <td>{{ $employee->idno }}</td>
-                            <td>{{ $employee->lastname }}, {{ $employee->firstname }}</td>
+                            <td>{{ $employee->firstname }}</td>
                             <td>{{ $employee->company }}</td>
                             <td>{{ $employee->department }}</td>
-                            <td>{{ $employee->jobposition }}</td>
-                            <td>@if($employee->employmentstatus == 'Active') Active @else Archived @endif</td>
+                            
+                            <td>@if($employee->employmentstatus == 'Active') Ativo @else Inativo @endif</td>
                             <td class="align-right">
-                            <a href="{{ url('/profile/view/'.$employee->reference) }}" class="ui circular basic icon button tiny"><i class="file alternate outline icon"></i></a>
+                         <!--   <a href="{{ url('/profile/view/'.$employee->reference) }}" class="ui circular basic icon button tiny"><i class="file alternate outline icon"></i></a> -->
                             <a href="{{ url('/profile/edit/'.$employee->reference) }}" class="ui circular basic icon button tiny"><i class="edit outline icon"></i></a>
                             <a href="{{ url('/profile/delete/'.$employee->reference) }}" class="ui circular basic icon button tiny"><i class="trash alternate outline icon"></i></a>
                             <a href="{{ url('/profile/archive/'.$employee->reference) }}" class="ui circular basic icon button tiny"><i class="archive icon"></i></a>
