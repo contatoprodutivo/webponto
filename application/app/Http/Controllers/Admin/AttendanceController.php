@@ -20,12 +20,16 @@ class AttendanceController extends Controller
 {
     
     public function index() 
-    {
+    {   
+        // Verifica permissão de acesso
         if (permission::permitted('attendance')=='fail'){ return redirect()->route('denied'); }
-        
+
+        // Obtém dados de presença para exibição na página inicial
         $data = table::attendance()->orderBy('date', 'desc')->take(60)->get();
         $ss = table::settings()->select('clock_comment', 'time_format')->first();
-        $employees = table::people()->get();
+        $employees = table::people()
+		->join('tbl_company_data', 'tbl_people.id', '=', 'tbl_company_data.reference')
+		->get();
         $tf = table::settings()->value("time_format");
         $cc = table::settings()->value("clock_comment");
         
@@ -33,14 +37,15 @@ class AttendanceController extends Controller
     }
     
     public function clock()
-    {
+    {   // Retorna a view do relógio para registro de presença
         return view('clock');
     }
 
     public function edit($id, Request $request)
     {
         if (permission::permitted('attendance-edit')=='fail'){ return redirect()->route('denied'); }
-        
+
+        // Obtém dados para edição de presença
         $a = table::attendance()->where('id', $id)->first();
         $e_id = ($a->id == null) ? 0 : Crypt::encryptString($a->id) ;
         $tf = table::settings()->value("time_format");
@@ -49,25 +54,26 @@ class AttendanceController extends Controller
     }
 
     public function delete($id, Request $request)
-    {
+    {   // Verifica permissão de exclusão
         if (permission::permitted('attendance-delete')=='fail'){ return redirect()->route('denied'); }
 
         $id = $request->id;
+        // Deleta entrada de presença
         table::attendance()->where('id', $id)->delete();
 
         return redirect('attendance')->with('success', trans("Deleted!"));
     }
 
     public function update(Request $request)
-    {
+    {   // Verifica permissão de edição
         if (permission::permitted('attendance-edit')=='fail') { return redirect()->route('denied'); }
 
         $v = $request->validate([
-            'id' => 'required|max:200',
-            'idno' => 'required|max:100',
-            'timein' => 'required|max:15',
-            'timeout' => 'required|max:15',
-            'reason' => 'required|max:255',
+            //'id' => 'required|max:200',
+           // 'idno' => 'required|max:100',
+           // 'timein' => 'required|max:15',
+           // 'timeout' => 'required|max:15',
+            //'reason' => 'required|max:255',
         ]);
 
         $id = Crypt::decryptString($request->id);
@@ -75,6 +81,10 @@ class AttendanceController extends Controller
         $timeIN = date("Y-m-d h:i:s A", strtotime($request->timein_date." ".$request->timein));
         $timeOUT = date("Y-m-d h:i:s A", strtotime($request->timeout_date." ".$request->timeout));
         $reason = $request->reason;
+
+        // Lógica para calcular horários e status de entrada e saída
+        // Atualiza os dados de presença
+        // Redireciona para a página de presença com mensagem de sucesso
 
         $sched_in_time = table::schedules()->where([
             ['idno', '=', $idno], 
@@ -131,15 +141,19 @@ class AttendanceController extends Controller
             'status_timeout' => $status_out,
         ]);
 
-        return redirect('attendance')->with('success', trans("Employee attendance has been updated!"));
+        return redirect('attendance')->with('success', trans("Os dados foram atualizados com sucesso."));
     }
 
     public function addEntry(Request $request)
     {
+        // Verifica permissão de acesso
         if (permission::permitted('attendance')=='fail'){ return redirect()->route('denied'); }
 
+        // Validação dos dados do formulário e lógica para adicionar uma nova entrada de presença
+        // Redireciona para a página de presença com mensagem de sucesso ou erro
+
         if ($request->ref == NULL) {
-            return redirect('attendance')->with('error', trans("Please fill the form completely."));
+            return redirect('attendance')->with('error', trans("Os dados foram atualizados com sucesso."));
         }
 
         $v = $request->validate([
@@ -179,7 +193,7 @@ class AttendanceController extends Controller
         $lastname = $emp->lastname;
         $firstname = $emp->firstname;
         $mi = $emp->mi;
-        $employee = mb_strtoupper($lastname.', '.$firstname.' '.$mi);
+        $employee = mb_strtoupper($firstname);
 
         if ($timeout == null) 
         {
@@ -223,7 +237,7 @@ class AttendanceController extends Controller
                     ],
                 ]);
 
-                return redirect('attendance')->with('success', trans("Employee attendance has been added!"));
+                return redirect('attendance')->with('success', trans("Presença adicionada com sucesso."));
             }
         }
 
@@ -294,17 +308,20 @@ class AttendanceController extends Controller
                     ],
                 ]);
 
-                return redirect('attendance')->with('success', trans("Employee attendance has been added!"));
+                return redirect('attendance')->with('success', trans("Presença adicionada com sucesso."));
             }
         }
     }
 
     public function getFilter(Request $request) 
 	{
-		if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
+		// Verifica permissão de acesso
+        if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
 		
 		$datefrom = $request->datefrom;
 		$dateto = $request->dateto;
+
+        // Obtém dados filtrados por data, se fornecidos, e retorna como JSON
 		
 		if ($datefrom == null AND $dateto == null) 
 		{
