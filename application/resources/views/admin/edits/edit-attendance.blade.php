@@ -89,7 +89,7 @@
                                 <input class="time-mask" type="text" placeholder="00:00" name="timein" value="@isset($t_in){{ $t_in }}@else{{ '00:00' }}@endisset"/>
                             </div>
                             <div class="field">
-                                <label for="">{{ __('Time In Date') }}</label>
+                                <label for="">{{ __('Data Entrada') }}</label>
                                 <input class="readonly" type="text" placeholder="Date" name="date" value="@isset($a->date){{ date('d/m/Y', strtotime($a->date)) }}@endisset" readonly="" />
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                                 <input class="time-mask" type="text" placeholder="00:00" name="timeout" value="@if($a->timeout != null){{ $t_out }}@else{{ '00:00' }}@endif"/>
                             </div>
                             <div class="field">
-                                <label for="">{{ __('Time Out Date') }}</label>
+                                <label for="">{{ __('Data Saída') }}</label>
                                 <input type="date" name="timeout_date" value="">
                             </div>
                         </div>
