@@ -31,14 +31,13 @@
                         {{ csrf_field() }}
                         <div class="inline three fields">
                             <div class="two wide field">
-                                <input id="datefrom" type="text" name="datefrom" value="" placeholder="Start Date" class="airdatepicker">
-                                <i class="ui icon calendar alternate outline calendar-icon"></i>
+                                <input id="datefrom" type="date" name="datefrom" value="" placeholder="Data de Início" >                                
                             </div>
 
                             <div class="two wide field">
-                                <input id="dateto" type="text" name="dateto" value="" placeholder="End Date" class="airdatepicker">
-                                <i class="ui icon calendar alternate outline calendar-icon"></i>
+                                <input id="dateto" type="date" name="dateto" value="" placeholder="Data de Término" >                                
                             </div>
+
 
                             <input type="hidden" name="emp_id" value="">
                             <button id="btnfilter" class="ui icon button positive small inline-button"><i class="ui icon filter alternate"></i> {{ __("Filter") }}</button>
@@ -48,12 +47,13 @@
                     <table width="100%" class="table table-striped table-hover" id="dataTables-example" data-order='[[ 0, "desc" ]]'>
                         <thead>
                             <tr>
-                                <th>{{ __('Date') }}</th>
-                                <th>{{ __('Employee') }}</th>
-                                <th>{{ __('Time In') }}</th>
-                                <th>{{ __('Time Out') }}</th>
-                                <th>{{ __('Total Hours') }}</th>
-                                <th>{{ __('Status (In/Out)') }}</th>
+                                <th>{{ __('Data') }}</th>
+                                <th>{{ __('Matrícula') }}</th>
+                                <th>{{ __('Usuário') }}</th>                                
+                                <th>{{ __('Entrada') }}</th>
+                                <th>{{ __('Saída') }}</th>
+                                <th>{{ __('Total de horas') }}</th>
+                                <th>{{ __('Status (Entrada/Saída)') }}</th>
                                 @isset($ss)
                                     @if($ss->clock_comment == "on")
                                         <th>Comment</th>
@@ -66,7 +66,8 @@
                             @isset($data)
                             @foreach ($data as $d)
                             <tr>
-                                <td>{{ $d->date }}</td>
+                            <td>{{ \Carbon\Carbon::parse($d->date)->format('d/m/Y') }}</td>
+                            <td>{{ $d->idno }}</td>
                                 <td>{{ $d->employee }}</td>
                                 <td>
                                     @php 
@@ -270,7 +271,8 @@
                                 "</tr>");
                         } else {
                             tbody.append("<tr>"+ 
-                                        "<td>"+employee[i].date+"</td>" + 
+                                        "<td>"+moment(employee[i].date).format('DD/MM/YYYY')+"</td>" + // Data formatada
+                                        "<td>"+employee[i].idno+"</td>" +  // Matrícula do empregado adicionada
                                         "<td>"+employee[i].employee+"</td>" + 
                                         "<td>"+time(1)+"</td>" + 
                                         "<td>"+time(2)+"</td>" + 

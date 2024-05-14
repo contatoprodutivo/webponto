@@ -1,25 +1,26 @@
 @extends('layouts.default')
     
-    @section('meta')
-        <title>Edit Employee Attendance | Workday Time Clock</title>
-        <meta name="description" content="Workday edit employee attendance.">
-    @endsection 
+@section('meta')
+    <title>Editar presença | Webponto</title>
+    <meta name="description" content="Workday edit employee attendance.">
+@endsection 
 
-    @section('styles')
-        <link href="{{ asset('/assets/vendor/mdtimepicker/mdtimepicker.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('/assets/vendor/air-datepicker/dist/css/datepicker.min.css') }}" rel="stylesheet">
-    @endsection
+@section('styles')
+    <link href="{{ asset('/assets/vendor/air-datepicker/dist/css/datepicker.min.css') }}" rel="stylesheet">
+@endsection
 
-    @section('content')
+@section('content')
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="page-title">{{ __('Edit Attendance') }}</h2>
-            </div>    
-        </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="page-title">{{ __('Edit Attendance') }}</h2>
+        </div>    
+    </div>
 
-        <div class="row">
+   
+
+    <div class="row">
         <div class="col-md-12">
             <div class="box box-success">
                 <div class="box-content">
@@ -43,8 +44,8 @@
                                 <input type="text" name="employee" class="readonly" readonly="" value="@isset($a->employee){{ $a->employee }}@endisset">
                             </div>
                             <div class="field">
-                                <label for="">{{ __('Date') }}</label>
-                                <input class="readonly" type="text" placeholder="Date" name="date" value="@isset($a->date){{ $a->date }}@endisset" readonly="" />
+                                <label for="">{{ __('Data') }}</label>
+                                <input class="readonly" type="text" placeholder="Date" name="date" value="@isset($a->date){{ date('d/m/Y', strtotime($a->date)) }}@endisset" readonly="" />
                             </div>
                         </div>
                     @else 
@@ -60,15 +61,15 @@
                             @isset($a->timein) 
                                 @php 
                                     if($tf == 1) {
-                                        $t_in = date("h:i:s A",strtotime($a->timein)); 
+                                        $t_in = date("h:i A",strtotime($a->timein)); 
                                     } else {    
-                                        $t_in = date("H:i:s",strtotime($a->timein)); 
+                                        $t_in = date("H:i",strtotime($a->timein)); 
                                     }
                                     $t_in_date = date("m/d/Y",strtotime($a->timein)); 
                                 @endphp
                             @endisset
                             <input type="hidden" name="timein_date" value="@isset($t_in_date){{ $t_in_date }}@endisset">
-                            <input class="jtimepicker" type="text" placeholder="00:00:00 AM" name="timein" value="@isset($t_in){{ $t_in }}@endisset"/>
+                            <input class="time-mask" type="text" placeholder="00:00" name="timein" value="@isset($t_in){{ $t_in }}@else{{ '00:00' }}@endisset"/>
                         </div>
                     @else
                         <div class="two fields">
@@ -77,19 +78,19 @@
                                 @isset($a->timein) 
                                     @php 
                                         if($tf == 1) {
-                                            $t_in = date("h:i:s A",strtotime($a->timein)); 
+                                            $t_in = date("h:i A",strtotime($a->timein)); 
                                         } else {    
-                                            $t_in = date("H:i:s",strtotime($a->timein)); 
+                                            $t_in = date("H:i",strtotime($a->timein)); 
                                         }
                                         $t_in_date = date("m/d/Y",strtotime($a->timein)); 
                                     @endphp
                                 @endisset
                                 <input type="hidden" name="timein_date" value="@isset($t_in_date){{ $t_in_date }}@endisset">
-                                <input class="jtimepicker" type="text" placeholder="00:00:00 AM" name="timein" value="@isset($t_in){{ $t_in }}@endisset"/>
+                                <input class="time-mask" type="text" placeholder="00:00" name="timein" value="@isset($t_in){{ $t_in }}@else{{ '00:00' }}@endisset"/>
                             </div>
                             <div class="field">
                                 <label for="">{{ __('Time In Date') }}</label>
-                                <input class="readonly" type="text" placeholder="Date" name="date" value="@isset($a->date){{ $a->date }}@endisset" readonly="" />
+                                <input class="readonly" type="text" placeholder="Date" name="date" value="@isset($a->date){{ date('d/m/Y', strtotime($a->date)) }}@endisset" readonly="" />
                             </div>
                         </div>
                     @endif
@@ -99,14 +100,14 @@
                             <label for="">{{ __('Time Out') }}</label>
                                 @php 
                                     if($tf == 1) {
-                                        $t_out = date("h:i:s A",strtotime($a->timeout)); 
+                                        $t_out = date("h:i A",strtotime($a->timeout)); 
                                     } else {    
-                                        $t_out = date("H:i:s",strtotime($a->timeout)); 
+                                        $t_out = date("H:i",strtotime($a->timeout)); 
                                     }
                                     $t_out_date = date("m/d/Y",strtotime($a->timeout)); 
                                 @endphp
                             <input type="hidden" name="timeout_date" value="@if($a->timeout != null){{ $t_out_date }}@endif">
-                            <input class="jtimepicker" type="text" placeholder="00:00:00 AM" name="timeout" value="@if($a->timeout != null){{ $t_out }}@endif"/>
+                            <input class="time-mask" type="text" placeholder="00:00" name="timeout" value="@if($a->timeout != null){{ $t_out }}@else{{ '00:00' }}@endif"/>
                         </div>
                     @else
                         <div class="two fields">
@@ -115,26 +116,26 @@
                                 @isset($a->timeout) 
                                     @php 
                                         if($tf == 1) {
-                                            $t_out = date("h:i:s A",strtotime($a->timeout)); 
+                                            $t_out = date("h:i A",strtotime($a->timeout)); 
                                         } else {    
-                                            $t_out = date("H:i:s",strtotime($a->timeout)); 
+                                            $t_out = date("H:i",strtotime($a->timeout)); 
                                         }
                                         $t_out_date = date("m/d/Y",strtotime($a->timeout)); 
                                     @endphp
                                 @endisset
                                 <input type="hidden" name="timeout_date" value="@if($a->timeout != null){{ $t_out_date }}@endif">
-                                <input class="jtimepicker" type="text" placeholder="00:00:00 AM" name="timeout" value="@if($a->timeout != null){{ $t_out }}@endif"/>
+                                <input class="time-mask" type="text" placeholder="00:00" name="timeout" value="@if($a->timeout != null){{ $t_out }}@else{{ '00:00' }}@endif"/>
                             </div>
                             <div class="field">
                                 <label for="">{{ __('Time Out Date') }}</label>
-                                <input type="text" name="timeout_date" value="" class="airdatepicker">
+                                <input type="date" name="timeout_date" value="">
                             </div>
                         </div>
                     @endif
 
                     <div class="fields">
                         <div class="sixteen wide field">
-                            <label>{{ __('Reason') }}</label>
+                            <label>{{ __('Justificativa') }}</label>
                             <textarea class="" rows="5" name="reason">@isset($a->reason){{ $a->reason }}@endisset</textarea>
                         </div>
                     </div>
@@ -159,23 +160,18 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 
-    @endsection
+@endsection
 
-    @section('scripts')
-    <script src="{{ asset('/assets/vendor/mdtimepicker/mdtimepicker.min.js') }}"></script>
-    <script src="{{ asset('/assets/vendor/air-datepicker/dist/js/datepicker.min.js') }}"></script>
-    <script src="{{ asset('/assets/vendor/air-datepicker/dist/js/i18n/datepicker.en.js') }}"></script>
+@section('scripts')
+<script src="{{ asset('/assets/vendor/air-datepicker/dist/js/datepicker.min.js') }}"></script>
+<script src="{{ asset('/assets/vendor/air-datepicker/dist/js/i18n/datepicker.en.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     
-    <script type="text/javascript">
-    @isset($tf)
-        @if($tf == 1)
-            $('.jtimepicker').mdtimepicker({format:'h:mm tt', theme: 'blue', hourPadding: true});
-        @else
-            $('.jtimepicker').mdtimepicker({format:'hh:mm', theme: 'blue', hourPadding: true});
-        @endif
-    @endisset
-    $('.airdatepicker').datepicker({ language: 'en', dateFormat: 'yyyy-mm-dd' });
-    </script>
-    @endsection
+<script type="text/javascript">
+//$('.airdatepicker').datepicker({ language: 'en', dateFormat: 'yyyy-mm-dd' });
+$('.time-mask').mask('00:00', {placeholder: "HH:MM"});
+$('.date-mask').mask('00/00/0000', {placeholder: "DD/MM/YYYY"});
+</script>
+@endsection
