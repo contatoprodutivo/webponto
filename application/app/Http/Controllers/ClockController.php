@@ -102,7 +102,7 @@ class ClockController extends Controller
             $lastname = $emp->lastname;     // Sobrenome do funcionário
             $firstname = $emp->firstname;   // Primeiro nome do funcionário
             $mi = $emp->mi;                 // Inicial do nome do meio do funcionário
-            $employee = mb_strtoupper($lastname.', '.$firstname.' '.$mi); // Monta o nome completo do funcionário em maiúsculas
+            $employee = mb_strtoupper($firstname); // Monta o nome completo do funcionário em maiúsculas
 
             // Verifica se o tipo de registro é de entrada (timein)
             if ($type == 'timein') 
