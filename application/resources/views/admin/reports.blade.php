@@ -18,11 +18,11 @@
                     <thead>
                         <tr>
                             <th>{{ __('Report name') }}</th>
-                            <th class="odd">{{ __('Last Viewed') }}</th>
+                          <!--  <th class="odd">{{ __('Last Viewed') }}</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                       <!-- <tr>
                             <td><a href="{{ url('reports/employee-list') }}"><i class="ui icon users"></i> {{ __('Employee List Report') }}</a></td>
                             <td class="odd">
                                 @isset($lastviews)
@@ -33,10 +33,10 @@
                                     @endforeach
                                 @endisset
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr>
-                            <td><a href="{{ url('reports/employee-attendance') }}"><i class="ui icon clock"></i> {{ __('Employee Attendance Report') }}</a></td>
-                            <td class="odd">
+                            <td><a href="{{ url('reports/employee-attendance') }}"><i class="ui icon clock"></i> {{ __('Relatório de Presença de Usuário') }}</a></td>
+                           <!-- <td class="odd">
                                 @isset($lastviews)
                                     @foreach ($lastviews as $views)
                                         @if($views->report_id == 2)
@@ -44,10 +44,10 @@
                                         @endif
                                     @endforeach
                                 @endisset
-                            </td>
+                            </td> -->
                         </tr>
-                        <tr>
-                            <td><a href="{{ url('reports/employee-leaves') }}"><i class="ui icon calendar plus"></i> {{ __('Employee Leaves Report') }}</a></td>
+                        <tr> 
+                         <!--   <td><a href="{{ url('reports/employee-leaves') }}"><i class="ui icon calendar plus"></i> {{ __('Employee Leaves Report') }}</a></td>
                             <td class="odd">
                                 @isset($lastviews)
                                     @foreach ($lastviews as $views)
@@ -57,8 +57,8 @@
                                     @endforeach
                                 @endisset
                             </td>
-                        </tr>
-                        <tr>
+                        </tr> -->
+                      <!--  <tr>
                             <td><a href="{{ url('reports/employee-schedule') }}"><i class="ui icon calendar alternate outline"></i> {{ __('Employee Schedule Report') }}</a></td>
                             <td class="odd">
                                 @isset($lastviews)
@@ -69,8 +69,8 @@
                                     @endforeach
                                 @endisset
                             </td>
-                        </tr>
-                        <tr>
+                        </tr> -->
+                       <!-- <tr>
                             <td><a href="{{ url('reports/organization-profile') }}"><i class="ui icon chart pie"></i> {{ __("Organizational Profile") }}</a></td>
                             <td class="odd">
                                 @isset($lastviews)
@@ -81,8 +81,8 @@
                                     @endforeach
                                 @endisset
                             </td>
-                        </tr>
-                        <tr>
+                        </tr> -->
+                     <!--  <tr>
                             <td><a href="{{ url('reports/employee-birthdays') }}"><i class="ui icon birthday cake"></i> {{ __('Employee Birthdays') }}</a></td>
                             <td class="odd">
                                 @isset($lastviews)
@@ -93,8 +93,8 @@
                                     @endforeach
                                 @endisset
                             </td>
-                        </tr>
-                        <tr>
+                        </tr> -->
+                       <!-- <tr>
                             <td><a href="{{ url('reports/user-accounts') }}"><i class="ui icon address book outline"></i> {{ __('User Accounts Report') }}</a></td>
                             <td class="odd">
                                 @isset($lastviews)
@@ -105,7 +105,7 @@
                                     @endforeach
                                 @endisset
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
                 </div>
