@@ -153,7 +153,7 @@ class AttendanceController extends Controller
         // Redireciona para a página de presença com mensagem de sucesso ou erro
 
         if ($request->ref == NULL) {
-            return redirect('attendance')->with('error', trans("Os dados foram atualizados com sucesso."));
+            return redirect('attendance')->with('error', trans("A operação de registro de presença não pôde ser concluída. Por favor, tente novamente ou entre em contato com o suporte."));
         }
 
         $v = $request->validate([
@@ -178,7 +178,7 @@ class AttendanceController extends Controller
 
             if(in_array($ip, $ips) == false) 
             {
-                return redirect('attendance')->with('error', trans("Whoops! You are not allowed to Clock In or Out from your IP address")." ".$ip);
+                return redirect('attendance')->with('error', trans("Opa! Você não tem permissão para entrar ou sair do seu endereço IP")." ".$ip);
             }
         } 
 

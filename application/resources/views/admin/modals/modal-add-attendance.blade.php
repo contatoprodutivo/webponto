@@ -5,7 +5,7 @@
         @csrf
         <div class="field">
             <label>{{ __("Usuário") }}</label>
-            <select class="ui search dropdown getref uppercase" name="name">
+            <select class="ui search dropdown getref uppercase" name="name" required>
                 <option value="">Selecione</option>
                 @isset($employees)
                     @foreach ($employees as $data)
@@ -16,15 +16,15 @@
         </div>
         <div class="field">
             <label for="">{{ __("Data") }}</label>
-            <input type="date" name="date" data-position="top right">
+            <input type="date" name="date" data-position="top right" required>
         </div>
         <div class="field">
             <label for="">{{ __("Time IN") }} <span class="help">(Obrigatório)</span></label>
-            <input class="time-mask" type="text" placeholder="00:00" name="timein" value="" required>
+            <input type="text" name="timein" placeholder="00:00" pattern="^[0-2][0-9]:[0-5][0-9]$" title="Formato HH:MM" required>
         </div>
         <div class="field">
             <label for="">{{ __("Time OUT") }} <span class="help">(Opcional)</span></label>
-            <input class="time-mask" type="text" placeholder="00:00" name="timeout" value="">
+            <input type="text" name="timeout" placeholder="00:00" pattern="^[0-2][0-9]:[0-5][0-9]$" title="Formato HH:MM">
         </div>
         <div class="field">
             <div class="ui error message">
@@ -43,4 +43,3 @@
     </div>
     </form>
 </div>
-
