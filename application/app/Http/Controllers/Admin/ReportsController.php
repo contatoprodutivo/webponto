@@ -50,18 +50,30 @@ class ReportsController extends Controller
 
     // Presença de funcionários: Exibe presenças e atualiza a última visualização
 	public function empAtten(Request $request) 
-	{
+{
 		// Verifica permissão de acesso ao relatório de presença de funcionários
 		if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
-		
+    
 		// Define a data atual formatada
 		$today = date('M, d Y');
-		// Obtém a lista de presenças dos funcionários
-		$empAtten = table::attendance()->get();
+		
+    // Consulta para selecionar dados de presença dos funcionários com join na tabela de dados da empresa
+    	$empAtten = DB::table('tbl_company_data as a')
+        ->join('tbl_people_attendance as b', 'a.idno', '=', 'b.idno')
+        ->select('a.company', 'a.department', 'b.*')
+        ->get();
+
 		// Seleciona funcionários ativos e seus dados da empresa associada
-		$employee = table::people()->join('tbl_company_data', 'tbl_people.id', '=', 'tbl_company_data.reference')->where('tbl_people.employmentstatus', 'Active')->get();
+		$employee = table::people()
+		->join('tbl_company_data', 'tbl_people.id', '=', 'tbl_company_data.reference')
+		->where('tbl_people.employmentstatus', 'Active')
+		->get();
+
 		// Atualiza a data da última visualização do relatório de presença
-		table::reportviews()->where('report_id', 2)->update(array('last_viewed' => $today));
+		table::reportviews()
+		->where('report_id', 2)
+		->update(array('last_viewed' => $today));
+
         // Obtém o formato de tempo das configurações
         $tf = table::settings()->value("time_format");
 
@@ -208,33 +220,29 @@ class ReportsController extends Controller
     // Retorna dados de presença do funcionário baseado em critérios específicos via JSON
 	public function getEmpAtten(Request $request) 
 	{
-		// Verifica permissão de acesso ao método de obtenção de dados de presença
 		if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
-		
-		// Obtém os parâmetros da requisição
+	
 		$id = $request->id;
 		$datefrom = $request->datefrom;
 		$dateto = $request->dateto;
-		
-		// Filtra e retorna os dados de presença conforme os critérios especificados
-		if ($id == null AND $datefrom == null AND $dateto == null) 
-		{
-			$data = table::attendance()->select('idno', 'date', 'employee', 'timein', 'timeout', 'totalhours')->get();
-			return response()->json($data);
+	
+		$query = DB::table('tbl_people_attendance as b')
+			->join('tbl_company_data as a', 'a.idno', '=', 'b.idno')
+			->select('b.idno', 'b.date', 'b.employee', 'b.timein', 'b.timeout', 'b.totalhours', 'a.company', 'a.department');
+	
+		if ($id) {
+			$query->where('b.idno', $id);
 		}
-
-		if($id !== null AND $datefrom == null AND $dateto == null ) 
-		{
-		 	$data = table::attendance()->where('idno', $id)->select('idno', 'date', 'employee', 'timein', 'timeout', 'totalhours')->get();
-			return response()->json($data);
-		} elseif ($id !== null AND $datefrom !== null AND $dateto !== null) {
-			$data = table::attendance()->where('idno', $id)->whereBetween('date', [$datefrom, $dateto])->select('idno', 'date', 'employee', 'timein', 'timeout', 'totalhours')->get();
-			return response()->json($data);
-		} elseif ($id == null AND $datefrom !== null AND $dateto !== null) {
-			$data = table::attendance()->whereBetween('date', [$datefrom, $dateto])->select('idno', 'date', 'employee', 'timein', 'timeout', 'totalhours')->get();
-			return response()->json($data);
-		} 
+	
+		if ($datefrom && $dateto) {
+			$query->whereBetween('b.date', [$datefrom, $dateto]);
+		}
+	
+		$data = $query->get();
+	
+		return response()->json($data);
 	}
+	
 
     // Retorna dados de licenças do funcionário baseado em critérios específicos via JSON
 	public function getEmpLeav(Request $request) 
