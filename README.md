@@ -7,3 +7,7 @@
 
 #### Melhorias:
 - Realizadas traduções para aprimorar a internacionalização da interface, facilitando o uso em diferentes idiomas.
+
+#### Erros:
+- Existe um erro no formulário caminho: C:\laragon\www\webponto\application\resources\views\admin\edits\edit-attendance.blade.php
+Precisa adicionar a máscara de hora.
