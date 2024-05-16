@@ -72,14 +72,14 @@
                 <li class="">
                     <a href="{{ url('schedules') }}">
                         <i class="ui icon calendar alternate outline"></i>
-                        <p>{{ __('Schedules') }}</p>
+                        <p>{{ __('Horário (Em breve)') }}</p>
                     </a>
                 </li>
                 
                 <li class="">
                     <a href="{{ url('leaves') }}">
                         <i class="ui icon calendar plus outline"></i>
-                        <p>{{ __('Leave') }}</p>
+                        <p>{{ __('Ausência (Em breve)') }}</p>
                     </a>
                 </li>
                 <li class="">
