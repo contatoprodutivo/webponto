@@ -219,29 +219,35 @@ class ReportsController extends Controller
 
     // Retorna dados de presença do funcionário baseado em critérios específicos via JSON
 	public function getEmpAtten(Request $request) 
-	{
-		if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
-	
-		$id = $request->id;
-		$datefrom = $request->datefrom;
-		$dateto = $request->dateto;
-	
-		$query = DB::table('tbl_people_attendance as b')
-			->join('tbl_company_data as a', 'a.idno', '=', 'b.idno')
-			->select('b.idno', 'b.date', 'b.employee', 'b.timein', 'b.timeout', 'b.totalhours', 'a.company', 'a.department');
-	
-		if ($id) {
-			$query->where('b.idno', $id);
-		}
-	
-		if ($datefrom && $dateto) {
-			$query->whereBetween('b.date', [$datefrom, $dateto]);
-		}
-	
-		$data = $query->get();
-	
-		return response()->json($data);
-	}
+{
+    if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
+
+    $id = $request->id;
+    $company = $request->company;  // Novo campo para filtro de empresa
+    $datefrom = $request->datefrom;
+    $dateto = $request->dateto;
+
+    $query = DB::table('tbl_people_attendance as b')
+        ->join('tbl_company_data as a', 'a.idno', '=', 'b.idno')
+        ->select('b.idno', 'b.date', 'b.employee', 'b.timein', 'b.timeout', 'b.totalhours', 'a.company', 'a.department');
+
+    if ($id) {
+        $query->where('b.idno', $id);
+    }
+
+    if ($company) {
+        $query->where('a.company', $company);
+    }
+
+    if ($datefrom && $dateto) {
+        $query->whereBetween('b.date', [$datefrom, $dateto]);
+    }
+
+    $data = $query->get();
+
+    return response()->json($data);
+}
+
 	
 
     // Retorna dados de licenças do funcionário baseado em critérios específicos via JSON

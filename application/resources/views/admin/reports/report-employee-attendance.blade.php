@@ -28,18 +28,18 @@
                     {{-- Proteção contra CSRF --}}
                     @csrf
                     <div class="inline three fields">
-                        {{-- Campo de seleção de empresa adicionado --}}
-                        <div class="three wide field">
-                            <select name="employee" class="ui search dropdown getid">
-                                <option value="">{{ __("Empresa") }}</option>
-                                {{-- Iteração sobre a coleção de funcionários para preenchimento das opções de empresa --}}
-                                @isset($employee)
-                                    @foreach($employee as $e)
-                                    <option value="{{ $e->company }}" data-id="{{ $e->idno }}">{{ $e->company }}</option>
-                                    @endforeach
-                                @endisset
-                            </select>
-                        </div>
+                    {{-- Campo de seleção de empresa adicionado --}}
+    <div class="three wide field">
+        <select name="company" class="ui search dropdown getid">
+            <option value="">{{ __("Empresa") }}</option>
+            {{-- Iteração sobre a coleção de funcionários para preenchimento das opções de empresa --}}
+            @isset($employee)
+                @foreach($employee->unique('company') as $e)
+                    <option value="{{ $e->company }}" data-id="{{ $e->idno }}">{{ $e->company }}</option>
+                @endforeach
+            @endisset
+        </select>
+    </div>
                         {{-- Campo de seleção de usuário --}}
                         <div class="three wide field">
                             <select name="employee" class="ui search dropdown getid">
@@ -135,7 +135,7 @@
     <script src="{{ asset('/assets/vendor/momentjs/moment-timezone-with-data.js') }}"></script>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
     // Configuração e funcionalidades adicionais do DataTable
     $('#dataTables-example').DataTable({
         responsive: true,
@@ -172,6 +172,7 @@
     $('#btnfilter').click(function(event) {
         event.preventDefault();
         var emp_id = $('input[name="emp_id"]').val();
+        var company = $('select[name="company"]').val(); // Captura o valor da empresa selecionada
         var date_from = $('#datefrom').val();
         var date_to = $('#dateto').val();
         var url = $("#_url").val();
@@ -190,6 +191,7 @@
             dataType: 'json',
             data: {
                 id: emp_id,
+                company: company,  // Adiciona o filtro de empresa à solicitação
                 datefrom: date_from,
                 dateto: date_to
             },
