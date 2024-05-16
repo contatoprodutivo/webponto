@@ -4,8 +4,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
-            <h2>Permission Denied</h2>
-            <p>Sorry, you don't have permission to access the page.</p>
+            <h2></h2>
+            <p></p>
         </div>
     </div>
 </div>
