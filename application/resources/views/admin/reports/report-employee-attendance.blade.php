@@ -50,13 +50,13 @@
                             <input id="dateto" type="date" name="dateto" value="" placeholder="dd/mm/yyyy">
                         </div>
                         <input type="hidden" name="emp_id" value="">
-                        <button id="btnfilter" class="ui icon button positive small inline-button"><i class="ui icon filter alternate"></i> {{ __("Filtrar") }}</button>
-                        <button type="submit" name="format" value="csv" class="ui icon button blue small inline-button"><i class="ui icon download"></i> {{ __("Download CSV") }}</button>
-                        <button type="button" class="ui icon button blue small inline-button disabled" title="Em breve" disabled>
-    <i class="ui icon download"></i> {{ __("Download PDF (Em breve)") }}
-</button>
-
-                        <button type="button" id="btnreset" class="ui icon button negative small inline-button"><i class="ui icon undo"></i> {{ __("Reset") }}</button>
+                         <!-- campos existentes -->
+                            <button id="btnfilter" class="ui icon button positive small inline-button"><i class="ui icon filter alternate"></i> {{ __("Filtrar") }}</button>
+                            <button type="submit" name="format" value="csv" class="ui icon button blue small inline-button"><i class="ui icon download"></i> {{ __("Download CSV") }}</button>
+                            <button type="button" class="ui icon button blue small inline-button disabled" title="Em breve" disabled>
+                                <i class="ui icon download"></i> {{ __("Download PDF (Em breve)") }}
+                            </button>
+                            <button type="button" id="btnreset" class="ui icon button negative small inline-button"><i class="ui icon undo"></i> {{ __("Reset") }}</button>
                     </div>
                 </form>
                 <table width="100%" class="table table-striped table-hover" id="dataTables-example" data-order='[[ 0, "desc" ]]'>
@@ -153,86 +153,87 @@
     });
 
     $('#btnfilter').click(function(event) {
-        event.preventDefault();
-        var emp_id = $('input[name="emp_id"]').val();
-        var company = $('select[name="company"]').val();
-        var date_from = $('#datefrom').val();
-        var date_to = $('#dateto').val();
-        var url = $("#_url").val();
+    event.preventDefault();
+    var emp_id = $('input[name="emp_id"]').val();
+    var company = $('select[name="company"]').val();
+    var date_from = $('#datefrom').val();
+    var date_to = $('#dateto').val();
+    var url = $("#_url").val();
 
-        if (date_from) {
-            date_from = formatDateToYMD(date_from);
+    if (date_from) {
+        date_from = formatDateToYMD(date_from);
+    }
+    if (date_to) {
+        date_to = formatDateToYMD(date_to);
+    }
+
+    $.ajax({
+        url: url + '/get/employee-attendance/',
+        type: 'get',
+        dataType: 'json',
+        data: {
+            id: emp_id,
+            company: company,
+            datefrom: date_from,
+            dateto: date_to
+        },
+        headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+        success: function(response) {
+            showdata(response);
         }
-        if (date_to) {
-            date_to = formatDateToYMD(date_to);
+    });
+
+    function showdata(jsonresponse) {
+        var employee = jsonresponse;
+        var tbody = $('#dataTables-example tbody');
+
+        $('#dataTables-example').DataTable().destroy();
+        tbody.children('tr').remove();
+
+        for (var i = 0; i < employee.length; i++) {
+            var formattedDate = formatDateToDMY(employee[i].date);
+            var idno = employee[i].idno;
+            var time_in = employee[i].timein;
+            var time_out = employee[i].timeout;
+            var total_hours = employee[i].totalhours;
+            var company = employee[i].company;
+            var department = employee[i].department;
+            var employee_name = employee[i].employee;
+
+            var formatted_time_in = time_in ? moment(time_in, "YYYY-MM-DD hh:mm:ss A").format("HH:mm") : "";
+            var formatted_time_out = time_out ? moment(time_out, "YYYY-MM-DD hh:mm:ss A").format("HH:mm") : "";
+
+            tbody.append("<tr>" +
+                "<td>"+ formattedDate +"</td>" +
+                "<td>"+ idno +"</td>" +
+                "<td>"+ employee_name +"</td>" +
+                "<td>"+ company +"</td>" +
+                "<td>"+ department +"</td>" +
+                "<td>"+ formatted_time_in +"</td>" +
+                "<td>"+ formatted_time_out +"</td>" +
+                "<td>"+ total_hours +"</td>" +
+                "</tr>");
         }
 
-        $.ajax({
-            url: url + '/get/employee-attendance/',
-            type: 'get',
-            dataType: 'json',
-            data: {
-                id: emp_id,
-                company: company,
-                datefrom: date_from,
-                dateto: date_to
-            },
-            headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
-            success: function(response) {
-                showdata(response);
-            }
+        $('#dataTables-example').DataTable({
+            responsive: true,
+            pageLength: 15,
+            lengthChange: false,
+            searching: false,
+            ordering: true
         });
+    }
+});
 
-        function showdata(jsonresponse) {
-            var employee = jsonresponse;
-            var tbody = $('#dataTables-example tbody');
-            
-            $('#dataTables-example').DataTable().destroy();
-            tbody.children('tr').remove();
+$('#btnreset').click(function(event) {
+    event.preventDefault();
+    $('select[name="company"]').val('').dropdown('clear');
+    $('select[name="employee"]').val('').dropdown('clear');
+    $('#datefrom').val('');
+    $('#dateto').val('');
+    $('input[name="emp_id"]').val('');
+    location.reload();
+});
 
-            for (var i = 0; i < employee.length; i++) {
-                var formattedDate = formatDateToDMY(employee[i].date);
-                var idno = employee[i].idno;
-                var time_in = employee[i].timein;
-                var time_out = employee[i].timeout;
-                var total_hours = employee[i].totalhours;
-                var company = employee[i].company;
-                var department = employee[i].department;
-                var employee_name = employee[i].employee;
-
-                var formatted_time_in = time_in ? moment(time_in, "YYYY-MM-DD hh:mm:ss A").format("HH:mm") : "";
-                var formatted_time_out = time_out ? moment(time_out, "YYYY-MM-DD hh:mm:ss A").format("HH:mm") : "";
-
-                tbody.append("<tr>"+ 
-                                "<td>"+ formattedDate +"</td>" + 
-                                "<td>"+ idno +"</td>" + 
-                                "<td>"+ employee_name +"</td>" + 
-                                "<td>"+ company +"</td>" + 
-                                "<td>"+ department +"</td>" + 
-                                "<td>"+ formatted_time_in +"</td>" + 
-                                "<td>"+ formatted_time_out +"</td>" + 
-                                "<td>"+ total_hours +"</td>" + 
-                            "</tr>");
-            }
-
-            $('#dataTables-example').DataTable({
-                responsive: true,
-                pageLength: 15,
-                lengthChange: false,
-                searching: false,
-                ordering: true
-            });
-        }
-    });
-
-    $('#btnreset').click(function(event) {
-        event.preventDefault();
-        $('select[name="company"]').val('').dropdown('clear');
-        $('select[name="employee"]').val('').dropdown('clear');
-        $('#datefrom').val('');
-        $('#dateto').val('');
-        $('input[name="emp_id"]').val('');
-        location.reload();
-    });
 </script>
 @endsection

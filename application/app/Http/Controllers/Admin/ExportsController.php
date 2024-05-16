@@ -14,10 +14,12 @@ use App\Classes\permission;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log; // Importando a classe Log corretamente
+use Illuminate\Support\Facades\Log;
 use Storage;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ExportsController extends Controller
 {
@@ -133,68 +135,100 @@ class ExportsController extends Controller
 	}
 
 	//INICIO DO RELATÓRIO DE PRESENÇA DE USUÁRIO
-	function attendanceReport(Request $request) 
-    {
-        if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
+	public function attendanceReport(Request $request) 
+{
+    if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
 
-        $id = $request->emp_id;
-        $datefrom = $request->datefrom;
-        $dateto = $request->dateto;
-        $format = $request->format; // 'csv' or 'pdf'
+    $id = $request->emp_id;
+    $company = $request->company; // Certifique-se de obter o valor do filtro da empresa
+    $datefrom = $request->datefrom;
+    $dateto = $request->dateto;
+    $format = $request->format; // 'csv' or 'pdf'
 
-        $data = null;
+    Log::info('attendanceReport request parameters', [
+        'emp_id' => $id,
+        'company' => $company,
+        'datefrom' => $datefrom,
+        'dateto' => $dateto,
+        'format' => $format,
+    ]);
 
-        if ($id == null AND $datefrom == null AND $dateto == null) 
-        {
-            $data = table::attendance()->get();
-        }
-        elseif ($id !== null AND $datefrom !== null AND $dateto !== null) 
-        {
-            $data = table::attendance()->where('idno', $id)->whereBetween('date', [$datefrom, $dateto])->get();
-        }
-        elseif($id !== null AND $datefrom == null AND $dateto == null ) 
-        {
-            $data = table::attendance()->where('idno', $id)->get();
-        } 
-        elseif ($id == null AND $datefrom !== null AND $dateto !== null) 
-        {
-            $data = table::attendance()->whereBetween('date', [$datefrom, $dateto])->get();
-        } 
-        else
-        {
-            return redirect('reports/employee-attendance')->with('error', trans("Whoops! Please provide date range or select employee."));
-        }
+    $query = DB::table('tbl_people_attendance as b')
+        ->join('tbl_company_data as a', 'a.idno', '=', 'b.idno')
+        ->select('b.date', 'b.idno', 'b.employee', 'a.company', 'a.department', 'b.timein', 'b.timeout', 'b.totalhours');
 
-        if ($format == 'csv') 
-        {
-            return $this->generateCSV($data);
-        }
-        elseif ($format == 'pdf') 
-        {
-            return $this->generatePDF($data);
-        }
-
-        return redirect('reports/employee-attendance')->with('error', trans("Invalid format selected."));
+    if ($id) {
+        $query->where('b.idno', $id);
     }
-    
-    function generateCSV($data)
-    {
-        $date = date('Y-m-d');
-        $time = date('h-i-sa');
-        $file = 'attendance-reports-'.$date.'T'.$time.'.csv';
 
-        Storage::put($file, '', 'private');
-
-        foreach ($data as $d) 
-        {
-            Storage::prepend($file, $d->id .','. $d->idno .','. $d->date .','. '"'.$d->employee.'"' .','. $d->timein .','. $d->timeout .','. $d->totalhours .','. $d->status_timein .','. $d->status_timeout);
-        }
-
-        Storage::prepend($file, '"ID"' .','. 'IDNO' .','. 'DATE' .','. 'EMPLOYEE' .','. 'TIME IN' .','. 'TIME OUT' .','. 'TOTAL HOURS' .','. 'STATUS-IN' .','. 'STATUS-OUT');
-
-        return Storage::download($file);
+    if ($company) {
+        $query->where('a.company', $company);
     }
-    
+
+    if ($datefrom && $dateto) {
+        $query->whereBetween('b.date', [$datefrom, $dateto]);
+    }
+
+    $data = $query->get();
+
+    Log::info('Generated query data', [
+        'data' => $data,
+    ]);
+
+    if ($format == 'csv') {
+        return $this->generateCSV($data);
+    }
+    elseif ($format == 'pdf') {
+        return $this->generatePDF($data);
+    }
+
+    return redirect('reports/employee-attendance')->with('error', trans("Invalid format selected."));
+}
+
+
+//CSV do relatório de presença de usuário.
+public function generateCSV($data)
+{
+    $date = date('Y-m-d');
+    $time = date('h-i-sa');
+    $file = 'Relatorio-presenca-usuario-'.$date.'T'.$time.'.csv';
+
+    Log::info('Generating CSV report', [
+        'file' => $file,
+    ]);
+
+    $handle = fopen(storage_path('app/'.$file), 'w');
+    // Adiciona o BOM para garantir a correta exibição dos caracteres no Excel
+    fwrite($handle, "\xEF\xBB\xBF");
+
+    // Cabeçalho do CSV
+    fputcsv($handle, ['Data', 'Matrícula', 'Usuário', 'Empresa', 'Turma', 'Entrada', 'Saída', 'Total de horas'], ';');
+
+    foreach ($data as $d) 
+    {
+        fputcsv($handle, [
+            $d->date,
+            $d->idno,
+            $d->employee,
+            $d->company,
+            $d->department,
+            $d->timein,
+            $d->timeout,
+            $d->totalhours
+        ], ';');
+    }
+
+    fclose($handle);
+
+    Log::info('CSV file created successfully', [
+        'file' => $file,
+    ]);
+
+    return Storage::download($file);
+}
+
+
+
     function generatePDF($data)
     {
         try {
@@ -234,8 +268,36 @@ class ExportsController extends Controller
             return redirect()->back()->with('error', 'There was an error generating the PDF. Please try again.');
         }
     }
-    
-    // Outros métodos (company, department, jobtitle, etc.) permanecem os mesmos.
+
+	public function testExcelExport()
+{
+    try {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Adiciona alguns dados de exemplo
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Name');
+        $sheet->setCellValue('A2', '1');
+        $sheet->setCellValue('B2', 'John Doe');
+        $sheet->setCellValue('A3', '2');
+        $sheet->setCellValue('B3', 'Jane Doe');
+
+        // Define o nome do arquivo e o caminho para salvá-lo
+        $fileName = 'test-report.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $filePath = storage_path('app/'.$fileName);
+        $writer->save($filePath);
+
+        // Força o download do arquivo e o exclui após o envio
+        return response()->download($filePath)->deleteFileAfterSend(true);
+    } catch (\Exception $e) {
+        Log::error('Error generating Excel file: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'There was an error generating the Excel file. Please try again.');
+    }
+}
+
+
 
 
 
