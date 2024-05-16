@@ -32,16 +32,16 @@
                     <form action="{{ url('user/update-password') }}" class="ui form" method="post" accept-charset="utf-8">
                         @csrf
                         <div class="field">
-                            <label>{{ __("Current Password") }}</label>
-                            <input type="password" name="currentpassword" value="" placeholder="Enter Current Password">
+                            <label>{{ __("Senha atual") }}</label>
+                            <input type="password" name="currentpassword" value="" placeholder="Digite a senha atual">
                         </div>
                         <div class="field">
                             <label for="">{{ __("New Password") }}</label>
-                            <input type="password" name="newpassword" value="" placeholder="Enter Password">
+                            <input type="password" name="newpassword" value="" placeholder="Digite a senha">
                         </div>
                         <div class="field">
-                            <label for="">{{ __("Confirm Password") }}</label>
-                            <input type="password" name="confirmpassword" value="" placeholder="Enter Password Confirmation">
+                            <label for="">{{ __("Confirme a senha") }}</label>
+                            <input type="password" name="confirmpassword" value="" placeholder="Insira a senha novamente">
                         </div>
                     </div>
                     <div class="box-footer">
