@@ -40,7 +40,7 @@
                     @if($a->timeout != null)
                         <div class="two fields">
                             <div class="field">
-                                <label>{{ __('Employee') }}</label>
+                                <label>{{ __('Usuário') }}</label>
                                 <input type="text" name="employee" class="readonly" readonly="" value="@isset($a->employee){{ $a->employee }}@endisset">
                             </div>
                             <div class="field">
