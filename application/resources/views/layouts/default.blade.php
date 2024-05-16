@@ -115,10 +115,10 @@
                         <ul class="nav navbar-nav ml-auto navmenu">
                             <li class="nav-item">
                                 <div class="ui pointing link dropdown item" tabindex="0">
-                                    <i class="ui icon flag"></i> <span class="navmenutext uppercase">{{ env('APP_LOCALE', 'en') }}</span>
+                                   <!-- <i class="ui icon flag"></i> <span class="navmenutext uppercase">{{ env('APP_LOCALE', 'en') }}</span>
                                     <i class="dropdown icon"></i>
                                     <div class="menu" tabindex="-1">
-                                     <!-- <a href="{{ url('lang/en') }}" class="item"><i class="flag-icon flag-icon-us"></i>English</a>
+                                      <a href="{{ url('lang/en') }}" class="item"><i class="flag-icon flag-icon-us"></i>English</a>
                                       <a href="{{ url('lang/es') }}" class="item"><i class="flag-icon flag-icon-es"></i>Español</a>
                                       <a href="{{ url('lang/fr') }}" class="item"><i class="flag-icon flag-icon-fr"></i>Français</a>
                                       <a href="{{ url('lang/de') }}" class="item"><i class="flag-icon flag-icon-de"></i>Deutsch</a>
@@ -128,17 +128,17 @@
                                       <a href="{{ url('lang/kr') }}" class="item"><i class="flag-icon flag-icon-kr"></i>한국말</a>
                                       <a href="{{ url('lang/my') }}" class="item"><i class="flag-icon flag-icon-my"></i>Malay</a>
                                       <a href="{{ url('lang/nl') }}" class="item"><i class="flag-icon flag-icon-nl"></i>Dutch</a>
-                                      <a href="{{ url('lang/ph') }}" class="item"><i class="flag-icon flag-icon-ph"></i>Filipino</a> -->
+                                      <a href="{{ url('lang/ph') }}" class="item"><i class="flag-icon flag-icon-ph"></i>Filipino</a> 
                                       <a href="{{ url('lang/pt') }}" class="item"><i class="flag-icon flag-icon-pt"></i>Português</a>
                                     </div>
                               </div>
-                            </li>
+                            </li>-->
                             <li class="nav-item">
                                 <div class="ui pointing link dropdown item" tabindex="0">
                                     <i class="ui icon linkify"></i> <span class="navmenutext uppercase">{{ __('Quick Access') }}</span>
                                     <i class="dropdown icon"></i>
                                     <div class="menu" tabindex="-1">
-                                      <a href="{{ url('clock') }}" target="_blank" class="item"><i class="ui icon clock outline"></i>{{ __('Clock In/Out') }}</a>
+                                      <a href="{{ url('clock') }}" target="_blank" class="item"><i class="ui icon clock outline"></i>{{ __('Ponto Online') }}</a>
                                       <div class="divider"></div>
                                       <a href="{{ url('employees/new') }}" class="item"><i class="ui icon user plus"></i>{{ __('Novo usuário') }}</a>
                                       <div class="divider"></div>
@@ -154,9 +154,9 @@
                                     <i class="ui icon user outline"></i> <span class="navmenutext">@isset(Auth::user()->name){{ Auth::user()->name }}@endisset</span>
                                     <i class="dropdown icon"></i>
                                     <div class="menu" tabindex="-1">
-                                      <a href="{{ url('update-profile') }}" class="item"><i class="ui icon user"></i>{{ __('Update Account') }}</a>
+                                     <!-- <a href="{{ url('update-profile') }}" class="item"><i class="ui icon user"></i>{{ __('Update Account') }}</a> -->
                                       <a href="{{ url('update-password') }}" class="item"><i class="ui icon lock"></i>{{ __('Change Password') }}</a>
-                                      <a href="{{ url('personal/dashboard') }}" target="_blank" class="item"><i class="ui icon sign-in"></i>{{ __('Switch to MyAccount') }}</a>
+                                     <!-- <a href="{{ url('personal/dashboard') }}" target="_blank" class="item"><i class="ui icon sign-in"></i>{{ __('Switch to MyAccount') }}</a> -->
                                       <div class="divider"></div>
                                       <a href="{{ url('logout') }}" class="item"><i class="ui icon power"></i>{{ __('Logout') }}</a>
                                     </div>
