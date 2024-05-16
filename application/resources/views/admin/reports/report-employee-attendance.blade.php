@@ -50,9 +50,12 @@
                             <input id="dateto" type="date" name="dateto" value="" placeholder="dd/mm/yyyy">
                         </div>
                         <input type="hidden" name="emp_id" value="">
-                        <button id="btnfilter" class="ui icon button positive small inline-button"><i class="ui icon filter alternate"></i> {{ __("Filter") }}</button>
+                        <button id="btnfilter" class="ui icon button positive small inline-button"><i class="ui icon filter alternate"></i> {{ __("Filtrar") }}</button>
                         <button type="submit" name="format" value="csv" class="ui icon button blue small inline-button"><i class="ui icon download"></i> {{ __("Download CSV") }}</button>
-                        <button type="submit" name="format" value="pdf" class="ui icon button blue small inline-button"><i class="ui icon download"></i> {{ __("Download PDF") }}</button>
+                        <button type="button" class="ui icon button blue small inline-button disabled" title="Em breve" disabled>
+    <i class="ui icon download"></i> {{ __("Download PDF (Em breve)") }}
+</button>
+
                         <button type="button" id="btnreset" class="ui icon button negative small inline-button"><i class="ui icon undo"></i> {{ __("Reset") }}</button>
                     </div>
                 </form>

@@ -7,12 +7,14 @@
 * Copyright 2020 Codefactor
 */
 namespace App\Http\Controllers\admin;
+
 use DB;
 use App\Classes\table;
 use App\Classes\permission;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log; // Importando a classe Log corretamente
 use Storage;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -134,14 +136,14 @@ class ExportsController extends Controller
 	function attendanceReport(Request $request) 
     {
         if (permission::permitted('reports')=='fail'){ return redirect()->route('denied'); }
-    
+
         $id = $request->emp_id;
         $datefrom = $request->datefrom;
         $dateto = $request->dateto;
         $format = $request->format; // 'csv' or 'pdf'
-    
+
         $data = null;
-    
+
         if ($id == null AND $datefrom == null AND $dateto == null) 
         {
             $data = table::attendance()->get();
@@ -162,7 +164,7 @@ class ExportsController extends Controller
         {
             return redirect('reports/employee-attendance')->with('error', trans("Whoops! Please provide date range or select employee."));
         }
-    
+
         if ($format == 'csv') 
         {
             return $this->generateCSV($data);
@@ -171,7 +173,7 @@ class ExportsController extends Controller
         {
             return $this->generatePDF($data);
         }
-    
+
         return redirect('reports/employee-attendance')->with('error', trans("Invalid format selected."));
     }
     
@@ -180,53 +182,62 @@ class ExportsController extends Controller
         $date = date('Y-m-d');
         $time = date('h-i-sa');
         $file = 'attendance-reports-'.$date.'T'.$time.'.csv';
-    
+
         Storage::put($file, '', 'private');
-    
+
         foreach ($data as $d) 
         {
             Storage::prepend($file, $d->id .','. $d->idno .','. $d->date .','. '"'.$d->employee.'"' .','. $d->timein .','. $d->timeout .','. $d->totalhours .','. $d->status_timein .','. $d->status_timeout);
         }
-    
+
         Storage::prepend($file, '"ID"' .','. 'IDNO' .','. 'DATE' .','. 'EMPLOYEE' .','. 'TIME IN' .','. 'TIME OUT' .','. 'TOTAL HOURS' .','. 'STATUS-IN' .','. 'STATUS-OUT');
-    
+
         return Storage::download($file);
     }
     
     function generatePDF($data)
     {
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', true);
-    
-        $dompdf = new Dompdf($options);
-        $html = '<h1>Attendance Report</h1>';
-        $html .= '<table border="1" cellpadding="10">';
-        $html .= '<thead><tr><th>ID</th><th>IDNO</th><th>DATE</th><th>EMPLOYEE</th><th>TIME IN</th><th>TIME OUT</th><th>TOTAL HOURS</th><th>STATUS-IN</th><th>STATUS-OUT</th></tr></thead>';
-        $html .= '<tbody>';
-    
-        foreach ($data as $d) 
-        {
-            $html .= '<tr>';
-            $html .= '<td>'.$d->id.'</td>';
-            $html .= '<td>'.$d->idno.'</td>';
-            $html .= '<td>'.$d->date.'</td>';
-            $html .= '<td>'.$d->employee.'</td>';
-            $html .= '<td>'.$d->timein.'</td>';
-            $html .= '<td>'.$d->timeout.'</td>';
-            $html .= '<td>'.$d->totalhours.'</td>';
-            $html .= '<td>'.$d->status_timein.'</td>';
-            $html .= '<td>'.$d->status_timeout.'</td>';
-            $html .= '</tr>';
+        try {
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', true);
+
+            $dompdf = new Dompdf($options);
+            $html = '<h1>Attendance Report</h1>';
+            $html .= '<table border="1" cellpadding="10">';
+            $html .= '<thead><tr><th>ID</th><th>IDNO</th><th>DATE</th><th>EMPLOYEE</th><th>TIME IN</th><th>TIME OUT</th><th>TOTAL HOURS</th><th>STATUS-IN</th><th>STATUS-OUT</th></tr></thead>';
+            $html .= '<tbody>';
+
+            foreach ($data as $d) 
+            {
+                $html .= '<tr>';
+                $html .= '<td>'.$d->id.'</td>';
+                $html .= '<td>'.$d->idno.'</td>';
+                $html .= '<td>'.$d->date.'</td>';
+                $html .= '<td>'.$d->employee.'</td>';
+                $html .= '<td>'.$d->timein.'</td>';
+                $html .= '<td>'.$d->timeout.'</td>';
+                $html .= '<td>'.$d->totalhours.'</td>';
+                $html .= '<td>'.$d->status_timein.'</td>';
+                $html .= '<td>'.$d->status_timeout.'</td>';
+                $html .= '</tr>';
+            }
+
+            $html .= '</tbody></table>';
+
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+            return $dompdf->stream('attendance-report.pdf', ['Attachment' => 1]);
+        } catch (\Exception $e) {
+            Log::error('Error generating PDF: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'There was an error generating the PDF. Please try again.');
         }
-    
-        $html .= '</tbody></table>';
-    
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'landscape');
-        $dompdf->render();
-        return $dompdf->stream('attendance-report.pdf', ['Attachment' => 1]);
     }
+    
+    // Outros métodos (company, department, jobtitle, etc.) permanecem os mesmos.
+
+
 
 	function leavesReport(Request $request) 
 	{
