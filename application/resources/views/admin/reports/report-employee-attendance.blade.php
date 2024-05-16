@@ -1,18 +1,14 @@
-{{-- Extende o layout padrão do sistema --}}
 @extends('layouts.default')
 
-{{-- Seção para meta tags específicas da página de relatórios --}}
 @section('meta')
     <title>Relatórios | Webponto</title>
     <meta name="description" content="Relatórios de jornada de trabalho, visualização de relatórios e exportação ou download de relatórios.">
 @endsection
 
-{{-- Seção para adicionar estilos específicos relacionados aos relatórios --}}
 @section('styles')
     <link href="{{ asset('/assets/vendor/air-datepicker/dist/css/datepicker.min.css') }}" rel="stylesheet">
 @endsection
 
-{{-- Seção principal de conteúdo da página --}}
 @section('content')
 <div class="container-fluid">
     <div class="row">
@@ -24,49 +20,42 @@
     <div class="row">
         <div class="box box-success">
             <div class="box-body reportstable">
-                <form action="{{ url('export/report/attendance') }}" method="post" accept-charset="utf-8" class="ui small form form-filter" id="filterform">
-                    {{-- Proteção contra CSRF --}}
+                <form action="{{ url('export/report/attendance') }}" method="POST" accept-charset="utf-8" class="ui small form form-filter" id="filterform">
                     @csrf
                     <div class="inline three fields">
-                    {{-- Campo de seleção de empresa adicionado --}}
-    <div class="three wide field">
-        <select name="company" class="ui search dropdown getid">
-            <option value="">{{ __("Empresa") }}</option>
-            {{-- Iteração sobre a coleção de funcionários para preenchimento das opções de empresa --}}
-            @isset($employee)
-                @foreach($employee->unique('company') as $e)
-                    <option value="{{ $e->company }}" data-id="{{ $e->idno }}">{{ $e->company }}</option>
-                @endforeach
-            @endisset
-        </select>
-    </div>
-                        {{-- Campo de seleção de usuário --}}
+                        <div class="three wide field">
+                            <select name="company" class="ui search dropdown getid">
+                                <option value="">{{ __("Empresa") }}</option>
+                                @isset($employee)
+                                    @foreach($employee->unique('company') as $e)
+                                        <option value="{{ $e->company }}" data-id="{{ $e->idno }}">{{ $e->company }}</option>
+                                    @endforeach
+                                @endisset
+                            </select>
+                        </div>
                         <div class="three wide field">
                             <select name="employee" class="ui search dropdown getid">
                                 <option value="">{{ __("Usuário") }}</option>
                                 @isset($employee)
                                     @foreach($employee as $e)
-                                    <option value="{{ $e->idno }}, {{ $e->firstname }}" data-id="{{ $e->idno }}">{{ $e->idno }}, {{ $e->firstname }}</option>
+                                        <option value="{{ $e->idno }}, {{ $e->firstname }}" data-id="{{ $e->idno }}">{{ $e->idno }}, {{ $e->firstname }}</option>
                                     @endforeach
                                 @endisset
                             </select>
                         </div>
-                        {{-- Campos de data para seleção do período do relatório --}}
                         <div class="two wide field">
-                            <input id="datefrom" type="date" name="datefrom" value="" placeholder="dd/mm/yyyy" >
+                            <input id="datefrom" type="date" name="datefrom" value="" placeholder="dd/mm/yyyy">
                         </div>
                         <div class="two wide field">
-                            <input id="dateto" type="date" name="dateto" value="" placeholder="dd/mm/yyyy" >
+                            <input id="dateto" type="date" name="dateto" value="" placeholder="dd/mm/yyyy">
                         </div>
-
                         <input type="hidden" name="emp_id" value="">
-                        {{-- Botões de filtro e download de relatórios --}}
                         <button id="btnfilter" class="ui icon button positive small inline-button"><i class="ui icon filter alternate"></i> {{ __("Filter") }}</button>
-                        <button type="submit" name="submit" class="ui icon button blue small inline-button"><i class="ui icon download"></i> {{ __("Download") }}</button>
+                        <button type="submit" name="format" value="csv" class="ui icon button blue small inline-button"><i class="ui icon download"></i> {{ __("Download CSV") }}</button>
+                        <button type="submit" name="format" value="pdf" class="ui icon button blue small inline-button"><i class="ui icon download"></i> {{ __("Download PDF") }}</button>
+                        <button type="button" id="btnreset" class="ui icon button negative small inline-button"><i class="ui icon undo"></i> {{ __("Reset") }}</button>
                     </div>
                 </form>
-
-                {{-- Tabela para exibição dos dados de presença --}}
                 <table width="100%" class="table table-striped table-hover" id="dataTables-example" data-order='[[ 0, "desc" ]]'>
                     <thead>
                         <tr>
@@ -81,7 +70,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- Iteração sobre os dados de presença dos funcionários --}}
                         @isset($empAtten)
                         @foreach ($empAtten as $v)
                         <tr>
@@ -124,19 +112,14 @@
 </div>
 @endsection
 
-{{-- Seção para scripts específicos da página de relatórios --}}
 @section('scripts')
-
-
 <script src="{{ asset('/assets/vendor/mdtimepicker/mdtimepicker.min.js') }}"></script>
-    <script src="{{ asset('/assets/vendor/air-datepicker/dist/js/datepicker.min.js') }}"></script>
-    <script src="{{ asset('/assets/vendor/air-datepicker/dist/js/i18n/datepicker.en.js') }}"></script>
-    <script src="{{ asset('/assets/vendor/momentjs/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/vendor/momentjs/moment-timezone-with-data.js') }}"></script>
+<script src="{{ asset('/assets/vendor/air-datepicker/dist/js/datepicker.min.js') }}"></script>
+<script src="{{ asset('/assets/vendor/air-datepicker/dist/js/i18n/datepicker.en.js') }}"></script>
+<script src="{{ asset('/assets/vendor/momentjs/moment.min.js') }}"></script>
+<script src="{{ asset('/assets/vendor/momentjs/moment-timezone-with-data.js') }}"></script>
 
-
-    <script type="text/javascript">
-    // Configuração e funcionalidades adicionais do DataTable
+<script type="text/javascript">
     $('#dataTables-example').DataTable({
         responsive: true,
         pageLength: 15,
@@ -145,7 +128,6 @@
         ordering: true
     });
 
-    // Funções de formatação de data para ajuste de formato entre front-end e back-end
     function formatDateToYMD(date) {
         var parts = date.split('-');
         return parts[0] + '-' + parts[1] + '-' + parts[2];
@@ -156,7 +138,6 @@
         return parts[2] + '/' + parts[1] + '/' + parts[0];
     }
 
-    // Lógica para transferência de ID do funcionário entre os componentes de seleção
     $('.ui.dropdown.getid').dropdown({
         onChange: function(value, text, $selectedItem) {
             $('select[name="employee"] option').each(function() {
@@ -168,16 +149,14 @@
         }
     });
 
-    // Manipulação do botão de filtro para envio dos dados ao servidor e tratamento da resposta
     $('#btnfilter').click(function(event) {
         event.preventDefault();
         var emp_id = $('input[name="emp_id"]').val();
-        var company = $('select[name="company"]').val(); // Captura o valor da empresa selecionada
+        var company = $('select[name="company"]').val();
         var date_from = $('#datefrom').val();
         var date_to = $('#dateto').val();
         var url = $("#_url").val();
 
-        // Formatar data para envio ao backend
         if (date_from) {
             date_from = formatDateToYMD(date_from);
         }
@@ -191,7 +170,7 @@
             dataType: 'json',
             data: {
                 id: emp_id,
-                company: company,  // Adiciona o filtro de empresa à solicitação
+                company: company,
                 datefrom: date_from,
                 dateto: date_to
             },
@@ -205,13 +184,11 @@
             var employee = jsonresponse;
             var tbody = $('#dataTables-example tbody');
             
-            // Limpar dados e reinicializar DataTable
             $('#dataTables-example').DataTable().destroy();
             tbody.children('tr').remove();
 
-            // Adicionar dados dos funcionários na tabela
             for (var i = 0; i < employee.length; i++) {
-                var formattedDate = formatDateToDMY(employee[i].date);  // Formatar data
+                var formattedDate = formatDateToDMY(employee[i].date);
                 var idno = employee[i].idno;
                 var time_in = employee[i].timein;
                 var time_out = employee[i].timeout;
@@ -220,11 +197,9 @@
                 var department = employee[i].department;
                 var employee_name = employee[i].employee;
 
-                // Formatando os horários Time In e Time Out usando Moment.js
                 var formatted_time_in = time_in ? moment(time_in, "YYYY-MM-DD hh:mm:ss A").format("HH:mm") : "";
                 var formatted_time_out = time_out ? moment(time_out, "YYYY-MM-DD hh:mm:ss A").format("HH:mm") : "";
 
-                // Adicionando a linha com todos os campos necessários
                 tbody.append("<tr>"+ 
                                 "<td>"+ formattedDate +"</td>" + 
                                 "<td>"+ idno +"</td>" + 
@@ -237,7 +212,6 @@
                             "</tr>");
             }
 
-            // Inicialização do DataTable
             $('#dataTables-example').DataTable({
                 responsive: true,
                 pageLength: 15,
@@ -247,6 +221,15 @@
             });
         }
     });
-</script>
 
+    $('#btnreset').click(function(event) {
+        event.preventDefault();
+        $('select[name="company"]').val('').dropdown('clear');
+        $('select[name="employee"]').val('').dropdown('clear');
+        $('#datefrom').val('');
+        $('#dateto').val('');
+        $('input[name="emp_id"]').val('');
+        location.reload();
+    });
+</script>
 @endsection
