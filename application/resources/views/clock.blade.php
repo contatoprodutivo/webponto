@@ -1,6 +1,7 @@
 @extends('layouts.clock')
 
 @section('content')
+<br><br><br><br>
     <div class="container-fluid">       
         <div class="fixedcenter">            
             <div class="clockwrapper"></div>
