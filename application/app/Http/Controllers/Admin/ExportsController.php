@@ -191,7 +191,7 @@ public function generateCSV($data)
 {
     $date = date('Y-m-d');
     $time = date('h-i-sa');
-    $file = 'Relatorio-presenca-usuario-'.$date.'T'.$time.'.csv';
+    $file = 'Relatorio-presenca-usuario-'.$date.'-'.$time.'.csv';
 
     Log::info('Generating CSV report', [
         'file' => $file,
