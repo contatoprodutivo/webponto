@@ -211,6 +211,13 @@ img.wave {
     height: auto;
     z-index: -10;
 }
+/* Adicione ao seu arquivo CSS */
+#loading {
+    display: none;
+    font-size: 14px;
+    color: #555;
+}
+
 
 @media (max-width: 390px) {
     .timeclock {
