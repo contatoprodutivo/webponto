@@ -26,10 +26,9 @@ Route::group(['middleware' => 'auth'], function () {
 		| Universal SmartClock 
 		|--------------------------------------------------------------------------
 		*/
-		Route::get('clock', 'ClockController@clock');
+		Route::get('/clock', 'ClockController@clock')->name('clock'); // Adicionada a rota nomeada
 		Route::post('attendance/add', 'ClockController@add'); 
 		
-
 		Route::group(['middleware' => 'admin'], function () {
 			/*
 			|--------------------------------------------------------------------------
@@ -39,7 +38,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/', 'Admin\DashboardController@index');
 			Route::get('dashboard', 'Admin\DashboardController@index')->name('dashboard');	
 
-
 			/*
 			|--------------------------------------------------------------------------
 			| Employees 
@@ -47,8 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
 			*/
 			Route::get('employees', 'Admin\EmployeesController@index')->name('employees');
 			Route::get('employees/new', 'Admin\EmployeesController@new');
-			Route::post('employee/add',  'Admin\EmployeesController@add');
-
+			Route::post('employee/add', 'Admin\EmployeesController@add');
 
 			/*
 			|--------------------------------------------------------------------------
@@ -64,7 +61,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('profile/edit/{id}', 'Admin\ProfileController@editPerson');
 			Route::post('profile/update', 'Admin\ProfileController@updatePerson');
 
-
 			/*
 			|--------------------------------------------------------------------------
 			| Employee Attendance 
@@ -77,7 +73,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('attendance/add-entry', 'Admin\AttendanceController@addEntry');
 			Route::get('attendance/filter', 'Admin\AttendanceController@getFilter');
 
-			
 			/*
 			|--------------------------------------------------------------------------
 			| Employee Schedules 
@@ -90,7 +85,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('schedules/delete/{id}', 'Admin\SchedulesController@delete');
 			Route::get('schedules/archive/{id}', 'Admin\SchedulesController@archive');
 
-
 			/*
 			|--------------------------------------------------------------------------
 			| Employee Leaves 
@@ -100,7 +94,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('leaves/edit/{id}', 'Admin\LeavesController@edit');
 			Route::get('leaves/delete/{id}', 'Admin\LeavesController@delete');
 			Route::post('leaves/update', 'Admin\LeavesController@update');
-			
 
 			/*
 			|--------------------------------------------------------------------------
@@ -115,7 +108,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('users/register', 'Admin\UsersController@register');
 			Route::post('users/update/user', 'Admin\UsersController@update');
 
-
 			/*
 			|--------------------------------------------------------------------------
 			| Employee Users & Roles 
@@ -129,7 +121,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('users/roles/permissions/edit/{id}', 'Admin\RolesController@editperm');
 			Route::post('users/roles/permissions/update', 'Admin\RolesController@updateperm');
 
-			
 			/*
 			|--------------------------------------------------------------------------
 			| Update User 
@@ -139,7 +130,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('update-password', 'Admin\ProfileController@viewPassword')->name('updatePassword');
 			Route::post('user/update-profile', 'Admin\ProfileController@updateUser');
 			Route::post('user/update-password', 'Admin\ProfileController@updatePassword');
-
 
 			/*
 			|--------------------------------------------------------------------------
@@ -160,7 +150,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('get/employee-leaves', 'Admin\ReportsController@getEmpLeav');
 			Route::get('get/employee-schedules', 'Admin\ReportsController@getEmpSched');
 
-
 			/*
 			|--------------------------------------------------------------------------
 			| Settings 
@@ -170,7 +159,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('settings/update', 'Admin\SettingsController@update');
 			Route::post('settings/reverse/activation', 'Admin\SettingsController@reverse');
 			Route::get('settings/get/app/info', 'Admin\SettingsController@appInfo');
-
 
 			/*
 			|--------------------------------------------------------------------------
@@ -201,7 +189,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('fields/leavetype/leave-groups/edit/{id}',  'Admin\FieldsController@editLeaveGroups');
 			Route::post('fields/leavetype/leave-groups/update',  'Admin\FieldsController@updateLeaveGroups');
 			Route::get('fields/leavetype/leave-groups/delete/{id}',  'Admin\FieldsController@deleteLeaveGroups');
-
 
 			/*
 			|--------------------------------------------------------------------------
