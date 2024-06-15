@@ -11,3 +11,5 @@
 #### Erros:
 - Existe um erro no formulário caminho: C:\laragon\www\webponto\application\resources\views\admin\edits\edit-attendance.blade.php
 Precisa adicionar a máscara de hora.
+
+###
