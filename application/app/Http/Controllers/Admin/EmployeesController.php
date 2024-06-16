@@ -122,8 +122,18 @@ class EmployeesController extends Controller
 		$nationalid = mb_strtoupper($request->nationalid);
 		$birthplace = mb_strtoupper($request->birthplace);
 		$homeaddress = mb_strtoupper($request->homeaddress);
-		$company = mb_strtoupper($request->company);
-		$department = mb_strtoupper($request->department);
+
+		// Separar o id_empresa e o company
+		$company_data = explode(',', $request->company);
+		$id_empresa = isset($company_data[0]) ? trim($company_data[0]) : null;
+		$company = isset($company_data[1]) ? trim($company_data[1]) : null;
+
+	    // Separar o id_turma e o department
+		$department_data = explode(',', $request->department);
+		$id_turma = isset($department_data[0]) ? trim($department_data[0]) : null;
+		$department = isset($department_data[1]) ? trim($department_data[1]) : null;
+
+	
 		$jobposition = mb_strtoupper($request->jobposition);
 		$companyemail = mb_strtolower($request->companyemail);
 		$leaveprivilege = $request->leaveprivilege;
@@ -133,12 +143,13 @@ class EmployeesController extends Controller
 		$startdate = date("Y-m-d", strtotime($request->startdate));
 		$dateregularized = date("Y-m-d", strtotime($request->dateregularized));
 
-		$is_idno_taken = table::companydata()->where('idno', $idno)->exists();
 
-		if ($is_idno_taken == 1) 
-		{
-			return redirect('employees-new')->with('error', trans("Whoops! the ID Number is already taken."));
-		}
+		  // Verificar se o ID já está em uso por outro usuário
+		  $is_idno_taken = table::companydata()->where('idno', $idno)->exists();
+
+		  if ($is_idno_taken) {
+			  return redirect()->back()->with('error', trans("Ops! Esta matrícula já está cadastrada."))->withInput();
+		  }
 
 		$file = $request->file('image');
 
@@ -178,14 +189,16 @@ class EmployeesController extends Controller
     	table::companydata()->insert([
     		[
     			'reference' => $refId,
-				'company' => $company,
-				'department' => $department,
+				'company' => $request->company, // Manter o valor concatenado
+				'department' => $request->department, // Manter o valor concatenado
 				'jobposition' => $jobposition,
 				'companyemail' => $companyemail,
 				'leaveprivilege' => $leaveprivilege,
 				'idno' => $idno,
 				'startdate' => $startdate,
 				'dateregularized' => $dateregularized,
+				'id_company' => $id_empresa,  // Adicionando o campo id_company individual
+				'id_department' => $id_turma  // Adicionando o campo id_department individual
             ],
     	]);
 

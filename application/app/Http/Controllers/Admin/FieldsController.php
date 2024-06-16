@@ -44,6 +44,15 @@ class FieldsController extends Controller
       $id_empresa = $request->id_empresa;
       $cnpj = $request->cnpj;
 
+
+    // Verificar se o CNPJ já está em uso
+    $is_cnpj_taken = table::company()->where('cnpj', $cnpj)->exists();
+
+    if ($is_cnpj_taken) {
+        return redirect()->back()->with('error', trans("Ops! O CNPJ já está cadastrado."))->withInput();
+    }
+
+
       table::company()->insert([
         [
           'company' => $company,
@@ -90,6 +99,14 @@ class FieldsController extends Controller
     $department = mb_strtoupper($request->department);
     $id_turma = $request->id_turma;
     $semestre = $request->semestre;
+
+     // Verificar se o id_turma já está em uso
+     $is_id_turma_taken = table::department()->where('id_turma', $id_turma)->exists();
+
+     if ($is_id_turma_taken) {
+         return redirect()->back()->with('error', trans("Ops! Este turma já está cadastrada."))->withInput();
+     }
+ 
 
     table::department()->insert([
       [
